@@ -1,0 +1,7 @@
+streamlit
+pydantic
+google-genai
+python-dotenv
+requests
+pytest
+pytest-asyncio
