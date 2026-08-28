@@ -33,9 +33,6 @@ logs/
 reports/
 *.pdf
 
-# Local screenshots
-screenshots/
-
 # IDE / Editors
 .vscode/
 .idea/

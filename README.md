@@ -1,37 +1,6 @@
 # ✈️ AI Travel Planner
 
-<p align="center">
-  <strong>AI-powered multi-agent travel planning application built with Python, Streamlit, Google Gemini, and Pydantic.</strong>
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Python-3.x-blue?logo=python&logoColor=white" alt="Python">
-  <img src="https://img.shields.io/badge/Streamlit-App-FF4B4B?logo=streamlit&logoColor=white" alt="Streamlit">
-  <img src="https://img.shields.io/badge/Google-Gemini-4285F4?logo=google&logoColor=white" alt="Google Gemini">
-  <img src="https://img.shields.io/badge/Pydantic-Data%20Validation-E92063?logo=pydantic&logoColor=white" alt="Pydantic">
-  <img src="https://img.shields.io/badge/Tests-Pytest-0A9EDC?logo=pytest&logoColor=white" alt="Pytest">
-  <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="MIT License">
-</p>
-
----
-
-## 🌍 Overview
-
-**AI Travel Planner** creates a complete, personalized travel plan from a destination, budget, trip duration, and start date.
-
-The application uses a **multi-agent architecture** in which specialized agents handle different parts of trip planning, while the **Master Travel Planner Agent** coordinates the overall workflow.
-
-### ✨ What It Generates
-
-- 🗓️ Day-by-day itinerary
-- 🏨 Hotel recommendations
-- 🍴 Restaurant recommendations
-- 🌤️ Weather forecast
-- 💰 Expense estimation
-- 🎒 Packing checklist
-- 📍 Maps and route information
-
----
+An AI-powered travel planning application built with **Python, Streamlit, Google Gemini, Pydantic, and a multi-agent architecture**.
 
 The application generates a complete travel plan based on the user's destination, budget, number of days, and start date.
 
@@ -47,165 +16,165 @@ It combines multiple specialized AI agents and tools to generate:
 
 ---
 
-
 ## 🚀 Features
 
-##### 1. 📋 Travel Request
+### 📋 Travel Request
 
 Users can provide:
 
-* Destination
-* Budget
-* Number of days
-* Start date
+- 📍 Destination
+- 💰 Travel budget
+- 📅 Number of travel days
+- 🗓️ Start date
 
-The request is validated using a Pydantic model.
-
----
-
-##### 2. 🤖 Multi-Agent Travel Planning
-
-The application uses multiple specialized agents.
-
-##### Planning Agent
-
-Creates the overall travel plan structure.
-
-##### Itinerary Agent
-
-Generates a day-by-day itinerary with:
-
-* Time
-* Activity
-* Description
-* Location
-* Estimated cost
-* Daily estimated cost
-
-##### Hotel Agent
-
-Provides hotel recommendations including:
-
-* Hotel name
-* Location
-* Price per night
-* Total stay cost
-* Rating
-* Category
-* Description
-
-##### Restaurant Agent
-
-Provides restaurant recommendations including:
-
-* Restaurant name
-* Location
-* Cuisine
-* Price level
-* Average cost
-* Rating
-* Best for
-* Description
-
-##### Packing Agent
-
-Creates a destination-specific packing checklist.
-
-##### Master Travel Planner Agent
-
-Coordinates all specialized agents and tools to produce the complete travel plan.
+The application validates the input and creates a structured travel request.
 
 ---
 
-## 🛠️ Tools
+### 🗓️ AI Itinerary Planning
 
-The project contains several supporting tools.
+The itinerary agent generates a day-by-day travel schedule including:
 
-### 🌤️ Weather Tool
-
-Provides weather forecast information including:
-
-* Location
-* Latitude
-* Longitude
-* Timezone
-* Weather code
-* Maximum temperature
-* Minimum temperature
-* Precipitation probability
-* Precipitation amount
+- Activity time
+- Activity title
+- Description
+- Location
+- Estimated cost
+- Daily estimated cost
 
 ---
 
-### 💰 Expense Tool
+### 🏨 Hotel Recommendations
 
-Calculates estimated travel expenses.
+The hotel agent provides hotel suggestions with:
 
-Expense categories include:
-
-* Hotel
-* Food
-* Transportation
-* Activities
-* Miscellaneous
-
-The application also calculates:
-
-* Total estimated cost
-* Remaining budget
-* Budget utilization percentage
-* Budget status
+- Hotel name
+- Location
+- Rating
+- Category
+- Price per night
+- Estimated total stay cost
+- Description
 
 ---
 
-### 📍 Maps Tool
+### 🍴 Restaurant Recommendations
 
-Provides location and route information.
+The restaurant agent generates restaurant suggestions including:
 
-It supports:
-
-* Geocoding
-* Route calculation
-* Distance calculation
-* Duration calculation
-* Route formatting
+- Restaurant name
+- Location
+- Cuisine
+- Price level
+- Average cost per person
+- Rating
+- Best for
+- Description
 
 ---
 
-## 🏗️ Project Architecture
+### 🌤️ Weather Forecast
+
+The weather tool provides forecast information including:
+
+- Location
+- Latitude
+- Longitude
+- Timezone
+- Maximum temperature
+- Minimum temperature
+- Precipitation probability
+- Precipitation amount
+- Weather code
+
+---
+
+### 💰 Expense Estimation
+
+The expense tool calculates estimated travel expenses for:
+
+- 🏨 Hotel
+- 🍴 Food
+- 🚗 Transportation
+- 🎯 Activities
+- 📦 Miscellaneous expenses
+
+It also calculates:
+
+- Total estimated cost
+- Remaining budget
+- Budget utilization percentage
+- Budget status
+
+---
+
+### 🎒 Packing Checklist
+
+The packing agent generates a destination-specific checklist with:
+
+- Item
+- Category
+- Quantity
+- Reason
+
+---
+
+### 📍 Maps & Routes
+
+The Maps tool supports:
+
+- Location geocoding
+- Route calculation
+- Distance information
+- Estimated travel duration
+- Origin coordinates
+- Destination coordinates
+
+---
+
+## 🤖 Multi-Agent Architecture
+
+The application uses a **Master Travel Planner Agent** that coordinates multiple specialized agents and tools.
 
 ```text
-User
-  │
-  ▼
-Streamlit UI
-  │
-  ▼
-Master Travel Planner Agent
-  │
-  ├── Planning Agent
-  │
-  ├── Itinerary Agent
-  │
-  ├── Hotel Agent
-  │
-  ├── Restaurant Agent
-  │
-  ├── Packing Agent
-  │
-  ├── Weather Tool
-  │
-  ├── Expense Tool
-  │
-  └── Maps Tool
-  │
-  ▼
-Complete Travel Plan
-```
+                    ┌─────────────────────────┐
+                    │   User Travel Request   │
+                    │ Destination / Budget    │
+                    │ Days / Start Date       │
+                    └────────────┬────────────┘
+                                 │
+                                 ▼
+                    ┌─────────────────────────┐
+                    │ Master Travel Planner   │
+                    │         Agent           │
+                    └────────────┬────────────┘
+                                 │
+             ┌───────────────────┼───────────────────┐
+             │                   │                   │
+             ▼                   ▼                   ▼
+      Planning Agent      Itinerary Agent      Hotel Agent
+             │                   │                   │
+             ▼                   ▼                   ▼
+      Restaurant Agent    Packing Agent       Weather Tool
+             │                   │                   │
+             └───────────────────┼───────────────────┘
+                                 │
+                    ┌────────────┴────────────┐
+                    │                         │
+                    ▼                         ▼
+              Expense Tool               Maps Tool
+                    │                         │
+                    └────────────┬────────────┘
+                                 │
+                                 ▼
+                    ┌─────────────────────────┐
+                    │   Complete Travel Plan  │
+                    └─────────────────────────┘
+````
 
 ---
 
-## 📁 Project Structure
+## 🏗️ Project Structure
 
 ```text
 AI_Travel_Planner/
@@ -244,20 +213,20 @@ AI_Travel_Planner/
 ├── reports/
 │
 ├── screenshots/
+│   ├── 01_home.png
+│   ├── 02_travel_request.png
+│   ├── 03_0_itinerary.png
+│   ├── 03_1_itinerary.png
+│   ├── 04_hotels.png
+│   ├── 05_restaurants.png
+│   ├── 06_weather.png
+│   ├── 07_expenses.png
+│   ├── 08_0_packing.png
+│   └── 08_1_packing.png
 │
 ├── tests/
-│   ├── __init__.py
 │   ├── test_hotel_agent.py
 │   ├── test_hotel_model.py
-│   ├── test_expense_demo.py
-│   ├── test_expense_model.py
-│   ├── test_expense_tool.py
-│   ├── test_gemini_hotel_agent.py
-│   ├── test_gemini_itinerary_agent.py
-│   ├── test_gemini_packing_agent.py
-│   ├── test_gemini_planning_agent.py
-│   ├── test_gemini_restaurant_agent.py
-│   ├── test_gemini_travel_agent.py
 │   ├── test_itinerary_agent.py
 │   ├── test_itinerary_validation.py
 │   ├── test_maps_model.py
@@ -276,8 +245,7 @@ AI_Travel_Planner/
 │   ├── test_settings.py
 │   ├── test_travel_agent.py
 │   ├── test_weather_model.py
-│   ├── test_weather_tool.py
-│   └── test_weather_tool_forecast.py
+│   └── test_weather_tool.py
 │
 ├── tools/
 │   ├── __init__.py
@@ -299,109 +267,57 @@ AI_Travel_Planner/
 
 ---
 
-## 💻 Technologies Used
+## 🛠️ Technologies Used
 
-| Technology    | Purpose                               |
-| ------------- | ------------------------------------- |
-| Python        | Core programming language             |
-| Streamlit     | Web application UI                    |
-| Google Gemini | Generative AI                         |
-| Pydantic      | Data validation and structured models |
-| Pytest        | Automated testing                     |
-| Requests      | API communication                     |
-| Python-dotenv | Environment variable management       |
-| Git           | Version control                       |
-| GitHub        | Source code repository                |
-
----
-
-## 🧠 AI Architecture
-
-The project follows a **multi-agent architecture**.
-
-Instead of using one AI component for the entire task, different agents are responsible for different parts of travel planning.
-
-```text
-                    ┌─────────────────────┐
-                    │       User          │
-                    └──────────┬──────────┘
-                               │
-                               ▼
-                    ┌─────────────────────┐
-                    │   Streamlit App     │
-                    └──────────┬──────────┘
-                               │
-                               ▼
-                 ┌──────────────────────────┐
-                 │ Master Travel Planner    │
-                 │         Agent            │
-                 └────────────┬─────────────┘
-                              │
-          ┌───────────────────┼───────────────────┐
-          │                   │                   │
-          ▼                   ▼                   ▼
-   Planning Agent     Itinerary Agent       Hotel Agent
-          │                   │                   │
-          └───────────────────┼───────────────────┘
-                              │
-          ┌───────────────────┼───────────────────┐
-          │                   │                   │
-          ▼                   ▼                   ▼
- Restaurant Agent      Packing Agent        Weather Tool
-                              │
-                              ▼
-                         Expense Tool
-                              │
-                              ▼
-                          Maps Tool
-                              │
-                              ▼
-                  Complete Travel Plan
-```
+| Technology           | Purpose                               |
+| -------------------- | ------------------------------------- |
+| Python               | Application development               |
+| Streamlit            | Web UI                                |
+| Google Gemini        | Generative AI                         |
+| Pydantic             | Data validation and structured models |
+| pytest               | Automated testing                     |
+| Open-Meteo           | Weather data                          |
+| Maps / Geocoding API | Location and route information        |
+| Git                  | Version control                       |
+| GitHub               | Source code hosting                   |
 
 ---
 
-## 🔗 Repository
+## 📦 Installation
 
-**GitHub:** https://github.com/balasminfotech/AI_Travel_Planner
-
----
-
-## ⚙️ Installation
-
-## 1. Clone the Repository
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/balasminfotech/AI_Travel_Planner.git
 ```
 
-Navigate to the project directory:
+### 2. Navigate to the project
 
 ```bash
 cd AI_Travel_Planner
 ```
 
----
-
-# 🐍 2. Create Virtual Environment
-
-Windows:
+### 3. Create a virtual environment
 
 ```bash
 python -m venv venv
 ```
 
-Activate the virtual environment:
+### 4. Activate the virtual environment
 
-```bash
+#### Windows PowerShell
+
+```powershell
+venv\Scripts\Activate.ps1
+```
+
+#### Windows CMD
+
+```cmd
 venv\Scripts\activate
 ```
 
----
-
-# 📦 3. Install Dependencies
-
-Install the required Python packages:
+### 5. Install dependencies
 
 ```bash
 pip install -r requirements.txt
@@ -409,32 +325,36 @@ pip install -r requirements.txt
 
 ---
 
-# 🔐 4. Configure Environment Variables
+## 🔐 Environment Variables
 
-Create a `.env` file in the project root directory.
-
-Example:
+Create a `.env` file in the project root.
 
 ```env
 GEMINI_API_KEY=your_gemini_api_key
 ```
 
-Do not commit your `.env` file to GitHub.
+Replace:
 
-The `.gitignore` file should contain:
+```text
+your_gemini_api_key
+```
+
+with your actual Google Gemini API key.
+
+**Do not commit your `.env` file to GitHub.**
+
+The `.gitignore` file should exclude:
 
 ```text
 .env
 venv/
 __pycache__/
 .pytest_cache/
-*.pyc
-logs/*.log
 ```
 
 ---
 
-## ▶️ Running the Application
+## ▶️ Run the Application
 
 Start the Streamlit application:
 
@@ -444,7 +364,7 @@ streamlit run app.py
 
 The application will open in your browser.
 
-Usually it will be available at:
+Default Streamlit URL:
 
 ```text
 http://localhost:8501
@@ -452,230 +372,194 @@ http://localhost:8501
 
 ---
 
-## 🧪 Running Tests
+# 📸 Application Screenshots
 
-The project includes automated tests for:
+## 🏠 Home Page
 
-* Models
-* Agents
-* Tools
-* Master agent
-* Weather
-* Maps
-* Expense calculation
-* Packing
-* Settings
-* Gemini integrations
+The home page provides the main interface for entering travel information.
 
-Run all tests:
+![AI Travel Planner Home](screenshots/01_home.png)
+
+---
+
+## 📋 Travel Request
+
+Users can enter the destination, budget, number of days, and start date.
+
+![Travel Request](screenshots/02_travel_request.png)
+
+---
+
+## 🗓️ AI Itinerary
+
+The AI generates a detailed day-by-day itinerary with activities, locations, timings, and estimated costs.
+
+![Itinerary](screenshots/03_0_itinerary.png)
+
+![Itinerary Details](screenshots/03_1_itinerary.png)
+
+---
+
+## 🏨 Hotel Recommendations
+
+The application provides AI-generated hotel recommendations with ratings, categories, and estimated prices.
+
+![Hotel Recommendations](screenshots/04_hotels.png)
+
+---
+
+## 🍴 Restaurant Recommendations
+
+The restaurant section provides recommended restaurants along with cuisine, pricing, ratings, and other information.
+
+![Restaurant Recommendations](screenshots/05_restaurants.png)
+
+---
+
+## 🌤️ Weather Forecast
+
+The weather section displays forecast information for the selected destination.
+
+![Weather Forecast](screenshots/06_weather.png)
+
+---
+
+## 💰 Expense Estimate
+
+The expense section provides a complete breakdown of the estimated travel expenses.
+
+![Expense Estimate](screenshots/07_expenses.png)
+
+---
+
+## 🎒 Packing Checklist
+
+The AI generates a destination-specific packing checklist.
+
+![Packing Checklist](screenshots/08_0_packing.png)
+
+![Packing Checklist Details](screenshots/08_1_packing.png)
+
+---
+
+# 🧪 Testing
+
+The project contains automated tests for models, agents, tools, workflows, and real API integrations.
+
+Run the complete test suite:
 
 ```bash
 python -m pytest -v
 ```
 
-Expected result:
+Example test result:
 
 ```text
 85 passed
 ```
 
-Run the model tests:
+Run the model tests separately:
 
 ```bash
 python -m pytest tests/test_models.py -v
 ```
 
-Expected result:
+---
+
+## 📊 Test Coverage
+
+The test suite covers:
+
+* Travel Request Model
+* Itinerary Models
+* Hotel Models
+* Restaurant Models
+* Weather Models
+* Expense Models
+* Packing Models
+* Maps Models
+* Planning Agent
+* Travel Agent
+* Itinerary Agent
+* Hotel Agent
+* Restaurant Agent
+* Packing Agent
+* Master Travel Planner Agent
+* Weather Tool
+* Expense Tool
+* Maps Tool
+* Application Settings
+* Master Workflow
+
+---
+
+# 🔄 Application Workflow
 
 ```text
-8 passed
+1. User enters travel details
+             ↓
+2. TravelRequest is created
+             ↓
+3. Master Travel Planner Agent starts
+             ↓
+4. Planning Agent creates travel strategy
+             ↓
+5. Itinerary Agent creates daily itinerary
+             ↓
+6. Hotel Agent recommends hotels
+             ↓
+7. Restaurant Agent recommends restaurants
+             ↓
+8. Weather Tool retrieves forecast
+             ↓
+9. Expense Tool calculates estimated expenses
+             ↓
+10. Packing Agent creates packing checklist
+             ↓
+11. Maps Tool calculates routes
+             ↓
+12. Complete Travel Plan displayed in Streamlit
 ```
 
 ---
 
-## 📊 Example Output
+# 🎯 Project Objectives
 
-The application generates a complete travel plan containing:
+The main objectives of this project are:
 
-```text
-🌍 Complete Travel Plan
-
-📊 Trip Summary
-
-Destination: Goa
-Budget: ₹30,000
-Days: 3
-
-🗓️ Day-by-Day Itinerary
-
-Day 1
-- Visit Aguada Fort
-- Lunch at Beachside Shack
-- Explore Fontainhas
-- Mandovi River Cruise
-
-Day 2
-- Basilica of Bom Jesus
-- Spice Plantation
-- Colva Beach
-- Heritage Restaurant
-
-Day 3
-- Anjuna Flea Market
-- Lunch
-- Chapora Fort
-
-🏨 Hotel Recommendations
-
-🍴 Restaurant Recommendations
-
-🌤️ Weather Forecast
-
-💰 Expense Estimate
-
-🎒 Packing Checklist
-
-📍 Maps & Routes
-```
+* Build a practical **Agentic AI application**
+* Implement a **multi-agent architecture**
+* Use specialized AI agents for different travel tasks
+* Integrate external tools and APIs
+* Use Pydantic for structured AI outputs
+* Build a user-friendly Streamlit interface
+* Implement automated testing
+* Follow a modular project architecture
+* Demonstrate real-world Agentic AI development
 
 ---
 
-## 💰 Expense Calculation
+# 🚀 Future Enhancements
 
-The Expense Tool calculates the total estimated travel cost.
+Potential future improvements include:
 
-Example:
-
-```text
-Hotel             ₹30,000
-Food               ₹3,000
-Transportation     ₹1,500
-Activities         ₹7,200
-Miscellaneous      ₹1,500
---------------------------------
-Total              ₹43,200
-```
-
-The application also calculates:
-
-```text
-Budget:              ₹30,000
-Estimated Cost:      ₹43,200
-Remaining Budget:   -₹13,200
-Utilization:          144%
-Status:              Over Budget
-```
-
----
-
-## 🔒 Security
-
-API keys and sensitive configuration values should be stored in environment variables.
-
-Never commit the following to GitHub:
-
-```text
-.env
-API keys
-Passwords
-Access tokens
-Secret credentials
-```
-
----
-
-## 🧪 Testing Strategy
-
-The project follows a structured testing approach.
-
-##### Unit Tests
-
-Tests individual:
-
-* Models
-* Agents
-* Tools
-* Utility functions
-
-##### Integration Tests
-
-Tests interaction between:
-
-* Agents
-* Tools
-* Master Travel Planner
-* Gemini API
-
-##### Real API Tests
-
-The project also contains tests for real integrations such as:
-
-* Gemini
-* Weather
-* Maps
-
-Make sure the required API configuration is available before running tests that access external services.
-
----
-
-## 📈 Future Improvements
-
-Possible future enhancements include:
-
-* 🗺️ Interactive maps
 * ✈️ Flight recommendations
-* 🚆 Train and bus recommendations
 * 🏨 Real-time hotel availability
-* 🍴 Real-time restaurant availability
-* 💳 Expense tracking
+* 🚕 Cab / transportation recommendations
+* 💳 Currency conversion
+* 🗺️ Interactive maps
 * 📄 PDF travel report generation
-* 📥 Markdown report export
-* 💾 Travel history
-* 🔐 User authentication
+* 📧 Email itinerary sharing
+* 💾 Travel plan history
+* 👤 User authentication
 * 🌐 Multi-language support
-* 📱 Mobile-friendly interface
-* ☁️ Cloud deployment
-* 🧠 Long-term travel preferences
-* 🔄 Re-planning based on weather conditions
 
 ---
 
-## 🎯 Learning Objectives
+# 👨‍💻 Author
 
-This project demonstrates practical implementation of:
-
-* Python
-* Object-Oriented Programming
-* Pydantic
-* Generative AI
-* Google Gemini
-* Prompt Engineering
-* Multi-Agent AI Architecture
-* Tool Calling
-* Streamlit
-* API Integration
-* Data Validation
-* Automated Testing
-* Git and GitHub
-* Environment Variables
-* Software Project Architecture
-
----
-
-## 👨‍💻 Author
-
-**Balasubramanian V**
+**BALASUBRAMANIAN V.**
 
 Python / Django Developer | Agentic AI Engineer
-
-GitHub: https://github.com/balasminfotech
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
-See the `LICENSE` file for more information.
 
 ---
