@@ -13,6 +13,9 @@ It combines multiple specialized AI agents and tools to generate:
 - 💰 Expense estimation
 - 🎒 Packing checklist
 - 📍 Maps and route information
+- 📤 PDF, Markdown, and JSON export
+- 🛡️ Graceful error handling and partial results
+- 📝 Rotating application logs
 
 ---
 
@@ -132,6 +135,40 @@ The Maps tool supports:
 
 ---
 
+## 📤 Travel Plan Export
+
+Generated travel plans can be downloaded directly from the Streamlit interface in three formats:
+
+- 📄 PDF
+- 📝 Markdown
+- 📦 JSON
+
+This makes the generated itinerary easy to save, share, inspect, or reuse in other applications.
+
+---
+
+## 🛡️ Error Handling and Partial Results
+
+The application is designed to remain usable when an external service cannot complete part of the workflow. For example, weather or route generation can fail while the itinerary, hotels, restaurants, expenses, packing checklist, and other successfully generated sections remain available.
+
+User-friendly warnings are displayed instead of terminating the complete travel-planning workflow.
+
+---
+
+## 📝 Application Logging
+
+Runtime activity is recorded in `logs/app.log`. Logging is configured with a rotating file handler to avoid uncontrolled log-file growth and to prevent duplicate handlers.
+
+Important application events such as successful plan storage, export generation, warnings, and exceptions can be recorded for troubleshooting and production verification.
+
+---
+
+## 📅 Weather Date Alignment
+
+Weather requests are aligned with the selected trip start and end dates. If forecast data is unavailable for the requested travel period, the application handles the unavailable weather component gracefully without breaking the rest of the travel plan.
+
+---
+
 ## 🤖 Multi-Agent Architecture
 
 The application uses a **Master Travel Planner Agent** that coordinates multiple specialized agents and tools.
@@ -170,7 +207,7 @@ The application uses a **Master Travel Planner Agent** that coordinates multiple
                     ┌─────────────────────────┐
                     │   Complete Travel Plan  │
                     └─────────────────────────┘
-````
+```
 
 ---
 
@@ -213,22 +250,37 @@ AI_Travel_Planner/
 ├── reports/
 │
 ├── screenshots/
-│   ├── 01_home.png
-│   ├── 02_travel_request.png
-│   ├── 03_0_itinerary.png
-│   ├── 03_1_itinerary.png
-│   ├── 04_hotels.png
-│   ├── 05_restaurants.png
-│   ├── 06_weather.png
-│   ├── 07_expenses.png
-│   ├── 08_0_packing.png
-│   └── 08_1_packing.png
+│   ├── 01-home-page.png
+│   ├── 02-trip-overview.png
+│   ├── 03-1-day-by-day-itinerary.png
+│   ├── 03-2-day-by-day-itinerary.png
+│   ├── 04-hotel-recommendations.png
+│   ├── 05-restaurant-recommendations.png
+│   ├── 06-weather-forecast.png
+│   ├── 07-expense-dashboard.png
+│   ├── 08-packing-checklist.png
+│   ├── 09-maps-routes.png
+│   ├── 10-export-travel-plan.png
+│   ├── 11-error-handling.png
+│   └── 12-logging.png
 │
 ├── tests/
+│   ├── test_error_handling.py
+│   ├── test_expense_demo.py
+│   ├── test_expense_model.py
+│   ├── test_expense_tool.py
+│   ├── test_export_utils.py
+│   ├── test_gemini_hotel_agent.py
+│   ├── test_gemini_itinerary_agent.py
+│   ├── test_gemini_packing_agent.py
+│   ├── test_gemini_planning_agent.py
+│   ├── test_gemini_restaurant_agent.py
+│   ├── test_gemini_travel_agent.py
 │   ├── test_hotel_agent.py
 │   ├── test_hotel_model.py
 │   ├── test_itinerary_agent.py
 │   ├── test_itinerary_validation.py
+│   ├── test_logging.py
 │   ├── test_maps_model.py
 │   ├── test_maps_tool.py
 │   ├── test_master_agent_initialization.py
@@ -244,8 +296,10 @@ AI_Travel_Planner/
 │   ├── test_restaurant_model.py
 │   ├── test_settings.py
 │   ├── test_travel_agent.py
+│   ├── test_weather_date_alignment.py
 │   ├── test_weather_model.py
-│   └── test_weather_tool.py
+│   ├── test_weather_tool.py
+│   └── test_weather_tool_forecast.py
 │
 ├── tools/
 │   ├── __init__.py
@@ -255,9 +309,12 @@ AI_Travel_Planner/
 │
 ├── utils/
 │   ├── __init__.py
+│   ├── error_handler.py
+│   ├── export_utils.py
 │   └── logger.py
 │
 ├── .env
+├── .env.example
 ├── .gitignore
 ├── app.py
 ├── LICENSE
@@ -327,7 +384,7 @@ pip install -r requirements.txt
 
 ## 🔐 Environment Variables
 
-Create a `.env` file in the project root.
+Create a `.env` file in the project root. You can use `.env.example` as the template for local configuration.
 
 ```env
 GEMINI_API_KEY=your_gemini_api_key
@@ -374,71 +431,55 @@ http://localhost:8501
 
 # 📸 Application Screenshots
 
-## 🏠 Home Page
+## 🏠 01 — Home Page
 
-The home page provides the main interface for entering travel information.
+![AI Travel Planner Home](screenshots/01-home-page.png)
 
-![AI Travel Planner Home](screenshots/01_home.png)
+## 🌍 02 — Trip Overview
 
----
+![Trip Overview](screenshots/02-trip-overview.png)
 
-## 📋 Travel Request
+## 🗓️ 03 — Day-by-Day Itinerary
 
-Users can enter the destination, budget, number of days, and start date.
+![Day-by-Day Itinerary - Part 1](screenshots/03-1-day-by-day-itinerary.png)
 
-![Travel Request](screenshots/02_travel_request.png)
+![Day-by-Day Itinerary - Part 2](screenshots/03-2-day-by-day-itinerary.png)
 
----
+## 🏨 04 — Hotel Recommendations
 
-## 🗓️ AI Itinerary
+![Hotel Recommendations](screenshots/04-hotel-recommendations.png)
 
-The AI generates a detailed day-by-day itinerary with activities, locations, timings, and estimated costs.
+## 🍴 05 — Restaurant Recommendations
 
-![Itinerary](screenshots/03_0_itinerary.png)
+![Restaurant Recommendations](screenshots/05-restaurant-recommendations.png)
 
-![Itinerary Details](screenshots/03_1_itinerary.png)
+## 🌤️ 06 — Weather Forecast
 
----
+![Weather Forecast](screenshots/06-weather-forecast.png)
 
-## 🏨 Hotel Recommendations
+## 💰 07 — Expense Dashboard
 
-The application provides AI-generated hotel recommendations with ratings, categories, and estimated prices.
+![Expense Dashboard](screenshots/07-expense-dashboard.png)
 
-![Hotel Recommendations](screenshots/04_hotels.png)
+## 🎒 08 — Packing Checklist
 
----
+![Packing Checklist](screenshots/08-packing-checklist.png)
 
-## 🍴 Restaurant Recommendations
+## 🗺️ 09 — Maps & Routes
 
-The restaurant section provides recommended restaurants along with cuisine, pricing, ratings, and other information.
+![Maps and Routes](screenshots/09-maps-routes.png)
 
-![Restaurant Recommendations](screenshots/05_restaurants.png)
+## 📤 10 — Export Travel Plan
 
----
+![Export Travel Plan](screenshots/10-export-travel-plan.png)
 
-## 🌤️ Weather Forecast
+## 🛡️ 11 — Error Handling
 
-The weather section displays forecast information for the selected destination.
+![Error Handling](screenshots/11-error-handling.png)
 
-![Weather Forecast](screenshots/06_weather.png)
+## 📝 12 — Logging
 
----
-
-## 💰 Expense Estimate
-
-The expense section provides a complete breakdown of the estimated travel expenses.
-
-![Expense Estimate](screenshots/07_expenses.png)
-
----
-
-## 🎒 Packing Checklist
-
-The AI generates a destination-specific packing checklist.
-
-![Packing Checklist](screenshots/08_0_packing.png)
-
-![Packing Checklist Details](screenshots/08_1_packing.png)
+![Application Logging](screenshots/12-logging.png)
 
 ---
 
@@ -455,7 +496,7 @@ python -m pytest -v
 Example test result:
 
 ```text
-85 passed
+95 passed in 31.43s
 ```
 
 Run the model tests separately:
@@ -490,6 +531,12 @@ The test suite covers:
 * Maps Tool
 * Application Settings
 * Master Workflow
+* Export Utilities (PDF / Markdown / JSON)
+* Error Handling and Partial Failures
+* Logging Configuration
+* Weather Date Alignment
+* Real Weather Integration
+* Real Maps / Routing Integration
 
 ---
 
@@ -547,8 +594,6 @@ Potential future improvements include:
 * 🏨 Real-time hotel availability
 * 🚕 Cab / transportation recommendations
 * 💳 Currency conversion
-* 🗺️ Interactive maps
-* 📄 PDF travel report generation
 * 📧 Email itinerary sharing
 * 💾 Travel plan history
 * 👤 User authentication

@@ -1,4 +1,12 @@
+from datetime import date, datetime, timedelta
+
 import requests
+
+from config.settings import (
+    WEATHER_FORECAST_URL,
+    WEATHER_GEOCODING_URL,
+    WEATHER_REQUEST_TIMEOUT,
+)
 
 from models.weather import (
     WeatherDay,
@@ -10,11 +18,11 @@ class WeatherTool:
     """Tool for retrieving real weather forecast data."""
 
     GEOCODING_URL = (
-        "https://geocoding-api.open-meteo.com/v1/search"
+        WEATHER_GEOCODING_URL
     )
 
     WEATHER_URL = (
-        "https://api.open-meteo.com/v1/forecast"
+        WEATHER_FORECAST_URL
     )
 
     def __init__(
@@ -216,6 +224,7 @@ class WeatherTool:
         self,
         location: str,
         forecast_days: int = 7,
+        start_date: date | str | None = None,
     ) -> WeatherForecast:
 
         if not location.strip():
@@ -255,9 +264,49 @@ class WeatherTool:
                 "precipitation_probability_max,"
                 "precipitation_sum"
             ),
-            "forecast_days": forecast_days,
             "timezone": "auto",
         }
+
+        # -------------------------------------------------
+        # Align weather dates with the requested trip dates.
+        #
+        # When start_date is supplied, Open-Meteo receives
+        # an explicit start_date/end_date range instead of
+        # returning weather beginning from "today".
+        # -------------------------------------------------
+
+        if start_date is not None:
+
+            if isinstance(start_date, str):
+                trip_start_date = datetime.strptime(
+                    start_date,
+                    "%Y-%m-%d",
+                ).date()
+            elif isinstance(start_date, datetime):
+                trip_start_date = start_date.date()
+            elif isinstance(start_date, date):
+                trip_start_date = start_date
+            else:
+                raise ValueError(
+                    "start_date must be a date, datetime, "
+                    "YYYY-MM-DD string, or None."
+                )
+
+            trip_end_date = (
+                trip_start_date
+                + timedelta(days=forecast_days - 1)
+            )
+
+            params["start_date"] = (
+                trip_start_date.isoformat()
+            )
+
+            params["end_date"] = (
+                trip_end_date.isoformat()
+            )
+
+        else:
+            params["forecast_days"] = forecast_days
 
         # -------------------------------------------------
         # Request weather data

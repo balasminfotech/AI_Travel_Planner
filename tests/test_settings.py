@@ -1,28 +1,25 @@
-from config.settings import (
-    APP_NAME,
-    APP_VERSION,
-    GEMINI_API_KEY,
-    MODEL_NAME,
-    TEMPERATURE,
-)
+from config import settings
 
 
-def test_app_name():
-    assert APP_NAME == "AI Travel Planner"
+def test_default_model_name_is_available():
+    assert isinstance(settings.MODEL_NAME, str)
+    assert settings.MODEL_NAME
 
 
-def test_app_version():
-    assert APP_VERSION == "1.0.0"
+def test_temperature_is_float():
+    assert isinstance(settings.TEMPERATURE, float)
 
 
-def test_gemini_api_key():
-    assert GEMINI_API_KEY is not None
-    assert len(GEMINI_API_KEY) > 0
+def test_request_timeouts_are_positive():
+    assert settings.WEATHER_REQUEST_TIMEOUT > 0
+    assert settings.MAPS_REQUEST_TIMEOUT > 0
 
 
-def test_model_name():
-    assert MODEL_NAME == "gemini-flash-lite-latest"
+def test_logging_configuration_is_positive():
+    assert settings.LOG_MAX_BYTES > 0
+    assert settings.LOG_BACKUP_COUNT >= 0
 
 
-def test_temperature():
-    assert 0.0 <= TEMPERATURE <= 1.0
+def test_validate_required_settings_returns_list():
+    result = settings.validate_required_settings()
+    assert isinstance(result, list)

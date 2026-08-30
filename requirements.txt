@@ -3,5 +3,8 @@ pydantic
 google-genai
 python-dotenv
 requests
+reportlab
+
+# Testing
 pytest
 pytest-asyncio

@@ -53,9 +53,22 @@ def test_master_travel_agent():
         name="planning_result"
     )
 
+    activity_1 = MagicMock()
+    activity_1.location = "Fort Aguada"
+
+    activity_2 = MagicMock()
+    activity_2.location = "Panaji"
+
+    day_plan = MagicMock()
+    day_plan.activities = [
+        activity_1,
+        activity_2,
+    ]
+
     itinerary_result = MagicMock(
         name="itinerary_result"
     )
+    itinerary_result.days = [day_plan]
 
     hotel_result = MagicMock(
         name="hotel_result"
@@ -108,6 +121,12 @@ def test_master_travel_agent():
     packing_agent.create_checklist.return_value = (
         packing_result
     )
+
+    route_result = MagicMock(
+        name="route_result"
+    )
+
+    maps_tool.route.return_value = route_result
 
     # =================================================
     # Create Travel Request
@@ -202,6 +221,7 @@ def test_master_travel_agent():
     weather_tool.get_forecast.assert_called_once_with(
         location=travel_request.destination,
         forecast_days=travel_request.days,
+        start_date=travel_request.start_date,
     )
 
     # =================================================
@@ -291,7 +311,9 @@ def test_master_travel_agent():
         is packing_result
     )
 
-    assert (
-        master_plan_kwargs["routes"]
-        == []
+    maps_tool.route.assert_called_once_with(
+        origin="Fort Aguada",
+        destination="Panaji",
     )
+
+    assert master_plan_kwargs["routes"] == [route_result]

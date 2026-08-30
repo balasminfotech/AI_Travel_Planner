@@ -1,13 +1,20 @@
 from models.master_travel_plan import MasterTravelPlan
 from models.travel_request import TravelRequest
+from utils.error_handler import friendly_error_message
+from utils.logger import get_logger
+
+
+logger = get_logger(__name__)
 
 
 class MasterTravelPlannerAgent:
     """
     Master Travel Planner Agent.
 
-    Orchestrates all specialized travel agents
-    and tools to create a complete travel plan.
+    Orchestrates specialized travel agents and tools while isolating
+    partial failures. A failed weather, maps, hotel, restaurant,
+    expense, or packing component should not automatically destroy
+    the rest of a valid travel plan.
     """
 
     def __init__(
@@ -35,65 +42,119 @@ class MasterTravelPlannerAgent:
         travel_request: TravelRequest,
     ) -> MasterTravelPlan:
 
+        warnings: list[str] = []
+
         # ============================================
         # 1. Planning
         # ============================================
 
-        planning_result = (
+        try:
             self.planning_agent.create_plan(
                 travel_request
             )
-        )
+        except Exception as exc:
+            warnings.append(
+                friendly_error_message(
+                    "Planning agent",
+                    exc,
+                )
+            )
 
         # ============================================
         # 2. Itinerary
         # ============================================
 
-        itinerary_result = (
-            self.itinerary_agent.create_itinerary(
-                travel_request=travel_request,
+        itinerary_result = None
+
+        try:
+            itinerary_result = (
+                self.itinerary_agent.create_itinerary(
+                    travel_request=travel_request,
+                )
             )
-        )
+        except Exception as exc:
+            warnings.append(
+                friendly_error_message(
+                    "Itinerary agent",
+                    exc,
+                )
+            )
 
         # ============================================
         # 3. Hotels
         # ============================================
 
-        hotel_result = (
-            self.hotel_agent.recommend_hotels(
-                travel_request=travel_request,
+        hotel_result = None
+
+        try:
+            hotel_result = (
+                self.hotel_agent.recommend_hotels(
+                    travel_request=travel_request,
+                )
             )
-        )
+        except Exception as exc:
+            warnings.append(
+                friendly_error_message(
+                    "Hotel agent",
+                    exc,
+                )
+            )
 
         # ============================================
         # 4. Restaurants
         # ============================================
 
-        restaurant_result = (
-            self.restaurant_agent.recommend_restaurants(
-                travel_request=travel_request,
+        restaurant_result = None
+
+        try:
+            restaurant_result = (
+                self.restaurant_agent.recommend_restaurants(
+                    travel_request=travel_request,
+                )
             )
-        )
+        except Exception as exc:
+            warnings.append(
+                friendly_error_message(
+                    "Restaurant agent",
+                    exc,
+                )
+            )
 
         # ============================================
         # 5. Weather
         # ============================================
 
-        weather_result = (
-            self.weather_tool.get_forecast(
-                location=travel_request.destination,
-                forecast_days=travel_request.days,
+        weather_result = None
+
+        try:
+            weather_result = (
+                self.weather_tool.get_forecast(
+                    location=travel_request.destination,
+                    forecast_days=travel_request.days,
+                    start_date=travel_request.start_date,
+                )
             )
-        )
+        except Exception as exc:
+            warnings.append(
+                friendly_error_message(
+                    "Weather service",
+                    exc,
+                )
+            )
 
         # ============================================
         # 6. Expense Calculation
         # ============================================
 
-        hotel_cost = sum(
-            hotel.total_stay_cost
-            for hotel in hotel_result.hotels
-        )
+        expense_result = None
+
+        hotel_cost = 0.0
+
+        if hotel_result is not None:
+            hotel_cost = sum(
+                hotel.total_stay_cost
+                for hotel in hotel_result.hotels
+            )
 
         food_cost = (
             travel_request.days
@@ -106,59 +167,121 @@ class MasterTravelPlannerAgent:
             * 500
         )
 
-        activities_cost = sum(
-            activity.estimated_cost
-            for day in itinerary_result.days
-            for activity in day.activities
-        )
+        activities_cost = 0.0
+
+        if itinerary_result is not None:
+            activities_cost = sum(
+                activity.estimated_cost
+                for day in itinerary_result.days
+                for activity in day.activities
+            )
 
         miscellaneous_cost = (
             travel_request.budget * 0.05
         )
 
-        expense_result = (
-            self.expense_tool.calculate(
-                budget=travel_request.budget,
-                currency=travel_request.currency,
-                hotel_cost=hotel_cost,
-                food_cost=food_cost,
-                transportation_cost=transportation_cost,
-                activities_cost=activities_cost,
-                miscellaneous_cost=miscellaneous_cost,
+        try:
+            expense_result = (
+                self.expense_tool.calculate(
+                    budget=travel_request.budget,
+                    currency=travel_request.currency,
+                    hotel_cost=hotel_cost,
+                    food_cost=food_cost,
+                    transportation_cost=transportation_cost,
+                    activities_cost=activities_cost,
+                    miscellaneous_cost=miscellaneous_cost,
+                )
             )
-        )
+        except Exception as exc:
+            warnings.append(
+                friendly_error_message(
+                    "Expense calculator",
+                    exc,
+                )
+            )
 
         # ============================================
         # 7. Packing
         # ============================================
 
-        packing_result = (
-            self.packing_agent.create_checklist(
-                travel_request=travel_request,
-                weather_summary=str(
-                    weather_result
-                ),
-                activities=str(
-                    itinerary_result
-                ),
+        packing_result = None
+
+        try:
+            packing_result = (
+                self.packing_agent.create_checklist(
+                    travel_request=travel_request,
+                    weather_summary=(
+                        str(weather_result)
+                        if weather_result is not None
+                        else "Weather unavailable"
+                    ),
+                    activities=(
+                        str(itinerary_result)
+                        if itinerary_result is not None
+                        else "Itinerary unavailable"
+                    ),
+                )
             )
-        )
+        except Exception as exc:
+            warnings.append(
+                friendly_error_message(
+                    "Packing agent",
+                    exc,
+                )
+            )
 
         # ============================================
-        # 8. Maps
-        # ============================================
-        #
-        # Routes will be generated when meaningful
-        # locations are available.
-        #
-        # We do not calculate:
-        #
-        # Goa -> Goa
-        #
-        # because that is not useful.
+        # 8. Maps / Routes
         # ============================================
 
         routes = []
+        route_failure_count = 0
+
+        if itinerary_result is not None:
+            for day_plan in itinerary_result.days:
+
+                activities = day_plan.activities or []
+                previous_location = None
+
+                for activity in activities:
+
+                    current_location = (
+                        str(activity.location).strip()
+                        if activity.location
+                        else ""
+                    )
+
+                    if not current_location:
+                        continue
+
+                    if (
+                        previous_location is not None
+                        and current_location.lower()
+                        != previous_location.lower()
+                    ):
+                        try:
+                            route_result = (
+                                self.maps_tool.route(
+                                    origin=previous_location,
+                                    destination=current_location,
+                                )
+                            )
+
+                            if route_result is not None:
+                                routes.append(route_result)
+                            else:
+                                route_failure_count += 1
+
+                        except Exception:
+                            route_failure_count += 1
+
+                    previous_location = current_location
+
+        if route_failure_count:
+            warnings.append(
+                f"Maps service could not generate "
+                f"{route_failure_count} itinerary route(s)."
+            )
 
         # ============================================
         # 9. Final Master Travel Plan
@@ -175,4 +298,5 @@ class MasterTravelPlannerAgent:
             expenses=expense_result,
             packing=packing_result,
             routes=routes,
+            generation_warnings=warnings,
         )

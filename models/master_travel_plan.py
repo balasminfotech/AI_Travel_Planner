@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from models.expense import ExpenseEstimate
 from models.hotel import HotelRecommendations
@@ -30,4 +30,6 @@ class MasterTravelPlan(BaseModel):
 
     packing: Optional[PackingChecklist] = None
 
-    routes: list[RouteResult] = []
+    routes: list[RouteResult] = Field(default_factory=list)
+
+    generation_warnings: list[str] = Field(default_factory=list)

@@ -2,6 +2,13 @@ from typing import Any
 
 import requests
 
+from config.settings import (
+    MAPS_GEOCODING_URL,
+    MAPS_REQUEST_TIMEOUT,
+    MAPS_ROUTING_URL,
+    MAPS_USER_AGENT,
+)
+
 from models.maps import (
     Location,
     RouteResult,
@@ -18,11 +25,11 @@ class MapsTool:
     """
 
     NOMINATIM_URL = (
-        "https://nominatim.openstreetmap.org/search"
+        MAPS_GEOCODING_URL
     )
 
     OSRM_URL = (
-        "https://router.project-osrm.org/route/v1/driving"
+        MAPS_ROUTING_URL
     )
 
     USER_AGENT = (
