@@ -38,6 +38,14 @@ from utils.error_handler import friendly_error_message
 from utils.logger import get_logger
 from config.settings import validate_required_settings
 
+
+# =====================================================
+# Logger
+# =====================================================
+
+logger = get_logger(__name__)
+
+
 # =====================================================
 # Page Configuration
 # =====================================================
