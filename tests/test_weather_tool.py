@@ -19,7 +19,6 @@ def test_empty_location():
     tool = WeatherTool()
 
     with pytest.raises(ValueError):
-
         tool.get_forecast("")
 
 
@@ -35,16 +34,35 @@ def test_invalid_forecast_days():
         )
 
 
-def test_geocode():
+def test_known_location_bypasses_geocoder():
+
+    with patch(
+        "tools.weather_tool.requests.get"
+    ) as mock_get:
+
+        tool = WeatherTool()
+
+        latitude, longitude, name = (
+            tool._geocode("Goa")
+        )
+
+    assert latitude == 15.4909
+    assert longitude == 73.8278
+    assert name == "Goa"
+
+    mock_get.assert_not_called()
+
+
+def test_generic_geocode():
 
     mock_response = Mock()
 
     mock_response.json.return_value = {
         "results": [
             {
-                "latitude": 15.4909,
-                "longitude": 73.8278,
-                "name": "Goa",
+                "latitude": 35.6762,
+                "longitude": 139.6503,
+                "name": "Tokyo",
             }
         ]
     }
@@ -60,17 +78,15 @@ def test_geocode():
 
         tool = WeatherTool()
 
-        (
-            latitude,
-            longitude,
-            name,
-        ) = tool._geocode("Goa")
+        latitude, longitude, name = (
+            tool._geocode("Tokyo")
+        )
 
-        assert latitude == 15.4909
-        assert longitude == 73.8278
-        assert name == "Goa"
+    assert latitude == 35.6762
+    assert longitude == 139.6503
+    assert name == "Tokyo"
 
-        mock_get.assert_called_once()
+    mock_get.assert_called_once()
 
 
 def test_location_not_found():

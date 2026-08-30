@@ -38,14 +38,6 @@ from utils.error_handler import friendly_error_message
 from utils.logger import get_logger
 from config.settings import validate_required_settings
 
-
-# =====================================================
-# Logger
-# =====================================================
-
-logger = get_logger(__name__)
-
-
 # =====================================================
 # Page Configuration
 # =====================================================
@@ -222,12 +214,12 @@ st.sidebar.divider()
 generate_plan = st.sidebar.button(
     "🚀 Generate Travel Plan",
     type="primary",
-    use_container_width=True,
+    width="stretch",
 )
 
 if st.sidebar.button(
     "🗑️ Clear Current Plan",
-    use_container_width=True,
+    width="stretch",
 ):
     st.session_state.travel_request = None
     st.session_state.travel_plan = None
@@ -432,7 +424,7 @@ if st.session_state.travel_plan is not None:
                 data=pdf_report,
                 file_name=f"{safe_destination}_travel_plan.pdf",
                 mime="application/pdf",
-                use_container_width=True,
+                width="stretch",
             )
 
         with export_col2:
@@ -441,7 +433,7 @@ if st.session_state.travel_plan is not None:
                 data=markdown_report,
                 file_name=f"{safe_destination}_travel_plan.md",
                 mime="text/markdown",
-                use_container_width=True,
+                width="stretch",
             )
 
         with export_col3:
@@ -450,7 +442,7 @@ if st.session_state.travel_plan is not None:
                 data=json_report,
                 file_name=f"{safe_destination}_travel_plan.json",
                 mime="application/json",
-                use_container_width=True,
+                width="stretch",
             )
 
         st.caption(
@@ -773,7 +765,7 @@ if st.session_state.travel_plan is not None:
 
             st.dataframe(
                 forecast_rows,
-                use_container_width=True,
+                width="stretch",
                 hide_index=True,
             )
 
@@ -974,7 +966,7 @@ if st.session_state.travel_plan is not None:
             if chart_data:
                 st.bar_chart(
                     chart_data,
-                    use_container_width=True,
+                    width="stretch",
                 )
             else:
                 st.info(
@@ -1007,7 +999,7 @@ if st.session_state.travel_plan is not None:
 
             st.dataframe(
                 table_rows,
-                use_container_width=True,
+                width="stretch",
                 hide_index=True,
             )
 

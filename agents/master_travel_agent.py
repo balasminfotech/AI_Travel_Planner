@@ -53,6 +53,13 @@ class MasterTravelPlannerAgent:
                 travel_request
             )
         except Exception as exc:
+            logger.warning(
+                "Planning agent failed | "
+                "error_type=%s | message=%s",
+                type(exc).__name__,
+                str(exc)[:500],
+            )
+
             warnings.append(
                 friendly_error_message(
                     "Planning agent",
@@ -73,6 +80,13 @@ class MasterTravelPlannerAgent:
                 )
             )
         except Exception as exc:
+            logger.warning(
+                "Itinerary agent failed | "
+                "error_type=%s | message=%s",
+                type(exc).__name__,
+                str(exc)[:500],
+            )
+
             warnings.append(
                 friendly_error_message(
                     "Itinerary agent",
@@ -93,6 +107,13 @@ class MasterTravelPlannerAgent:
                 )
             )
         except Exception as exc:
+            logger.warning(
+                "Hotel agent failed | "
+                "error_type=%s | message=%s",
+                type(exc).__name__,
+                str(exc)[:500],
+            )
+
             warnings.append(
                 friendly_error_message(
                     "Hotel agent",
@@ -113,6 +134,13 @@ class MasterTravelPlannerAgent:
                 )
             )
         except Exception as exc:
+            logger.warning(
+                "Restaurant agent failed | "
+                "error_type=%s | message=%s",
+                type(exc).__name__,
+                str(exc)[:500],
+            )
+
             warnings.append(
                 friendly_error_message(
                     "Restaurant agent",
@@ -135,6 +163,13 @@ class MasterTravelPlannerAgent:
                 )
             )
         except Exception as exc:
+            logger.warning(
+                "Weather service failed | "
+                "error_type=%s | message=%s",
+                type(exc).__name__,
+                str(exc)[:500],
+            )
+
             warnings.append(
                 friendly_error_message(
                     "Weather service",
@@ -193,6 +228,13 @@ class MasterTravelPlannerAgent:
                 )
             )
         except Exception as exc:
+            logger.warning(
+                "Expense calculator failed | "
+                "error_type=%s | message=%s",
+                type(exc).__name__,
+                str(exc)[:500],
+            )
+
             warnings.append(
                 friendly_error_message(
                     "Expense calculator",
@@ -223,6 +265,13 @@ class MasterTravelPlannerAgent:
                 )
             )
         except Exception as exc:
+            logger.warning(
+                "Packing agent failed | "
+                "error_type=%s | message=%s",
+                type(exc).__name__,
+                str(exc)[:500],
+            )
+
             warnings.append(
                 friendly_error_message(
                     "Packing agent",
@@ -272,8 +321,18 @@ class MasterTravelPlannerAgent:
                             else:
                                 route_failure_count += 1
 
-                        except Exception:
+                        except Exception as exc:
                             route_failure_count += 1
+
+                            logger.warning(
+                                "Route generation failed | "
+                                "origin=%s | destination=%s | "
+                                "error_type=%s | message=%s",
+                                previous_location,
+                                current_location,
+                                type(exc).__name__,
+                                str(exc)[:500],
+                            )
 
                     previous_location = current_location
 
