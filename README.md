@@ -6,6 +6,8 @@ The application generates a complete travel plan based on the user's destination
 
 It combines multiple specialized AI agents and tools to generate:
 
+> **Project Status:** ✅ Development complete · ✅ 101 automated tests passing · ✅ Deployed and production-verified on Streamlit Community Cloud
+
 - 🗓️ Day-by-day itinerary
 - 🏨 Hotel recommendations
 - 🍴 Restaurant recommendations
@@ -262,7 +264,10 @@ AI_Travel_Planner/
 │   ├── 09-maps-routes.png
 │   ├── 10-export-travel-plan.png
 │   ├── 11-error-handling.png
-│   └── 12-logging.png
+│   ├── 12-logging.png
+│   ├── 13-streamlit-production-overview.png
+│   ├── 14-streamlit-production-results.png
+│   └── 15-streamlit-production-maps.png
 │
 ├── tests/
 │   ├── test_error_handling.py
@@ -481,6 +486,18 @@ http://localhost:8501
 
 ![Application Logging](screenshots/12-logging.png)
 
+## 🚀 13 — Streamlit Production Overview
+
+![Streamlit Production Overview](screenshots/13-streamlit-production-overview.png)
+
+## ✅ 14 — Streamlit Production Results
+
+![Streamlit Production Results](screenshots/14-streamlit-production-results.png)
+
+## 🗺️ 15 — Streamlit Production Maps & Routes
+
+![Streamlit Production Maps and Routes](screenshots/15-streamlit-production-maps.png)
+
 ---
 
 # 🧪 Testing
@@ -496,7 +513,7 @@ python -m pytest -v
 Example test result:
 
 ```text
-95 passed in 31.43s
+101 passed in 29.38s
 ```
 
 Run the model tests separately:
@@ -569,6 +586,27 @@ The test suite covers:
 ```
 
 ---
+
+---
+
+# ☁️ Production Deployment
+
+The application is deployed on **Streamlit Community Cloud** and connected to the GitHub `main` branch. Updates pushed to the deployed branch are picked up by Streamlit Community Cloud and the application is redeployed.
+
+### Live Application
+
+https://ai-travel-planner-balasminfotech.streamlit.app
+
+### Production Configuration
+
+Sensitive values such as `GEMINI_API_KEY` are configured using **Streamlit Secrets** and are not committed to the GitHub repository. Local development continues to use the `.env` file.
+
+### Production Verification
+
+The deployed application was verified with a Bangalore travel-plan request. The production workflow successfully generated usable itinerary, hotel, restaurant, expense, packing, and maps/route sections. Weather availability is handled independently so an unavailable forecast does not terminate the complete travel-planning workflow.
+
+Production runtime logs can be inspected from the Streamlit Community Cloud app management interface for deployment and troubleshooting.
+
 
 # 🎯 Project Objectives
 
